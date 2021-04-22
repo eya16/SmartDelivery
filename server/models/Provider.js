@@ -8,7 +8,7 @@ const ProviderSchema = new Schema({
   },
   governorate: {
     type: String,
-    required: [true, "governorate required"],
+    required: [false, "governorate required"],
   },
   country: {
     type: String,
@@ -40,9 +40,22 @@ const ProviderSchema = new Schema({
   id_company: {
     type: String,
   },
+  // id_user: {
+  //   type: String,
+  // },
   id_user: {
-    type: String,
+    type: mongoose.Types.ObjectId,
+    required: false,
+    ref: "user",
+    autopopulate: true,
   },
+
+  loc: {
+    type: { type: String },
+    coordinates: [Number],
+  },
+  socketId: { type: String },
 });
+ProviderSchema.index({ loc: "2dsphere" });
 
 module.exports = mongoose.model("provider", ProviderSchema);
