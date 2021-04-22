@@ -1,7 +1,9 @@
 import "../styles/Sidebar.css";
 import { NavLink } from "react-router-dom";
 import { selectConnectuser } from "../redux/slices/userSlice";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetProvider } from "../redux/slices/providerSlice";
 
 export default function Sidebar() {
   const [connectUser, error] = useSelector(selectConnectuser);
@@ -50,6 +52,14 @@ export default function Sidebar() {
                     <i className="fa fa-map-marker"></i>
                   </span>
                   <span className="title">Vehicle Shot</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/homeuser/user/offerService">
+                  <span className="icon">
+                    <i className="fa fa-archive"></i>
+                  </span>
+                  <span className="title">Offer a service</span>
                 </NavLink>
               </li>
             </ul>

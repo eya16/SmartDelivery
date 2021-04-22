@@ -1,145 +1,28 @@
-/*
-import { GetProvider } from "../../../redux/slices/providerSlice";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import Cookies from "js-cookie";
-import {
-  loginUserfind,
-  selectConnectuser,
-} from "../../../redux/slices/userSlice";
-import "../../../styles/admin/Users.css";
-import { Link } from "react-router-dom";
-import ReactPaginate from "react-paginate";
-
-export default function Service(props) {
-  const [connectUser, error] = useSelector(selectConnectuser);
-  const dispatch = useDispatch();
-  const [pageNumber, setPageNumber] = useState(0);
-  const provider = useSelector((state) => state.providers.providers) || null;
-  const [providers, setProviders] = useState([]);
-  useEffect(() => {
-    async function fetching() {
-      if (Cookies.get("connect.sid")) {
-      } else {
-        await axios
-          .get("http://localhost:5000/auth/logout", { withCredentials: true })
-          .then((res) => {
-            console.log(res);
-            localStorage.removeItem("userInfo");
-            dispatch(loginUserfind(res.data));
-            props.history.push("/");
-          });
-      }
-      fetching();
-    }
-  }, [Cookies.get()]);
-
-  /*
-  useEffect(() => {
-    dispatch(GetProvider());
-    console.log(provider.data);
-  }, [provider, dispatch]);
-
-
-
-  useEffect(() => {
-
-  });
-  const usersPerPage = 10;
-  const pagesVisited = pageNumber * usersPerPage;
-
-  /*
-  const displayProviders = provider.data.map((provider, index) => (
-    <tr key={provider.id}>
-      <th scope="row">{index}</th>
-      <td>{provider.id_user}</td>
-      <td>{provider.FromDate}</td>
-      <td>{provider.ToDate}</td>
-      <td>{provider.Time}</td>
-      <td>{provider.governorate}</td>
-      <td>{provider.country}</td>
-      <td>{provider.vehicle}</td>
-      <td>{provider.proof_driving}</td>
-      <td>{provider.PackageSize}</td>
-
-      <td>
-        <span className="icon mr-3">
-          <i className="fa fa-pencil" style={{ color: "green" }}></i>
-        </span>
-        <span className="icon">
-          <i className="fa fa-trash" style={{ color: "red" }}></i>
-        </span>
-      </td>
-    </tr>
-  ));
-
-
-  return (
-    <section style={{ height: "1100px" }}>
-      <div className="row">
-        <div className="col-sm-8 col-md-11 " id="tableUsers">
-          <div className=" table-responsive-sm">
-            <h3> providers </h3>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">username </th>
-                  <th scope="col">FromDate</th>
-                  <th scope="col">ToDate</th>
-                  <th scope="col">Time</th>
-                  <th scope="col">governorate</th>
-                  <th scope="col">country</th>
-                  <th scope="col">vehicle</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {provider.map((pro, index) => (
-                  <tr>
-                    <th scope="row">{index}</th>
-                    <td></td>
-
-                    <td>{pro.username}</td>
-                    <td>{pro.FromDate}</td>
-                    <td>{pro.ToDate}</td>
-                    <td>{pro.Time}</td>
-                    <td>{pro.Vehicle}</td>
-                    <td>{pro.FromDate}</td>
-                    <td>
-                      <a className="btn btn-warning">
-                        <i className="fas fa-edit"></i>&nbsp;Edit
-                      </a>
-                      <a>
-                        <i className="far fa-trash-alt"></i>&nbsp;Delete
-                      </a>
-                      <a className="btn btn-warning">
-                        <i className="fas fa-edit"></i>&nbsp;Details
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div
-            style={{
-              marginTop: "20px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          ></div>
-        </div>
-      </div>
-    </section>
-  );
-}
-*/
-
 import React, { Component } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 
+import ReactTable from "react-table-6";
+
+import "react-table-6/react-table.css";
+import { makeObjets } from "./utils";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Collapse,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
 export default class Service extends Component {
   API_ENDPOINT = "http://localhost:5000/";
   constructor(props) {
@@ -167,10 +50,8 @@ export default class Service extends Component {
       }
     );
   };
-
   loadMoreData() {
     const data = this.state.orgvehicules;
-
     const slice = data.slice(
       this.state.offset,
       this.state.offset + this.state.perPage
@@ -181,44 +62,32 @@ export default class Service extends Component {
     });
   }
   componentDidMount() {
-    this.getVehicules();
+    this.getProviders();
   }
 
-  getVehicules() {
-    axios.get("http://localhost:5000/provider").then((res) => {
-      console.log(res.data);
-      var tdata = res.data.data;
+  getProviders() {
+    axios.get("http://localhost:5000/provider/getProviders").then((res) => {
+      console.log(res.data.providers);
+      this.setState({ data: makeObjets(res.data.providers) });
+    });
+  }
 
-      console.log("data-->" + JSON.stringify(tdata));
-      var slice = tdata.slice(
-        this.state.offset,
-        this.state.offset + this.state.perPage
-      );
-      this.setState({
-        pageCount: Math.ceil(tdata.length / this.state.perPage),
-        orgvehicules: res.data.data,
-        vehicules: slice,
-        modele: res.data.data.modele,
+  onDelete = (row) => {
+    axios
+      .put(`http://localhost:5000/provider/refuseprovider/${row.original.id}`)
+      .then((res) => {
+        alert("Provider has been disabled successfully");
+        this.getProviders();
       });
-      console.log("vehicules: ", this.state.vehicules);
-      console.log("orgvehicules: ", this.state.orgvehicules);
-      console.log("modele: ", this.state.modele);
-    });
-  }
-
-  onDelete = (id) => {
-    axios.delete(`http://localhost:5000/provider/${id}`).then((res) => {
-      alert(res.data.modele + " has been deleted successfully");
-      this.getVehicules();
-    });
   };
 
-  accepter = (id) => {
+  accepter = (row) => {
+    console.log(row);
     axios
-      .put(`http://localhost:5000/provider/acceptprovider/${id}`)
+      .put(`http://localhost:5000/provider/acceptprovider/${row.original.id}`)
       .then((res) => {
-        alert(res.data.modele + " has been acc successfully");
-        this.getVehicules();
+        alert("Provider has been accepted successfully");
+        this.getProviders();
       });
   };
 
@@ -242,12 +111,13 @@ export default class Service extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div style={{ width: "100%" }}>
         <div className="row">
           <div className="col-lg-9 mt-2 mb-2">
-            <h4>All Services</h4>
+            <h4>All providers</h4>
           </div>
-          <div className="col-lg-3 mt-2 mb-2">
+
+          {/* <div className="col-lg-3 mt-2 mb-2">
             <input
               className="form-control"
               type="search"
@@ -255,10 +125,96 @@ export default class Service extends Component {
               name="searchTerm"
               onChange={this.handleTextSearch}
             ></input>
-          </div>
+          </div> */}
         </div>
+        <ReactTable
+          data={this.state.data}
+          noDataText={"No providers"}
+          filterable
+          columns={[
+            {
+              Header: "Username",
+              accessor: "username",
+              filterMethod: (filter, row) =>
+                row.username.toLowerCase().includes(filter.value.toLowerCase()),
+            },
+            {
+              Header: "Email",
+              accessor: "email",
+              filterMethod: (filter, row) =>
+                row.email.toLowerCase().includes(filter.value.toLowerCase()),
+            },
+            {
+              Header: "Phone",
+              accessor: "phone",
+              filterMethod: (filter, row) =>
+                row.phone.toLowerCase().includes(filter.value.toLowerCase()),
+            },
+            {
+              Header: "From",
+              accessor: "FromDate",
+              filterMethod: (filter, row) =>
+                row.FromDate.toLowerCase().includes(filter.value.toLowerCase()),
+            },
+            {
+              Header: "To",
+              accessor: "ToDate",
+              filterMethod: (filter, row) =>
+                row.ToDate.toLowerCase().includes(filter.value.toLowerCase()),
+            },
+            {
+              Header: "Location",
+              accessor: "fullAdress",
+              filterMethod: (filter, row) =>
+                row.fullAdress
+                  .toLowerCase()
+                  .includes(filter.value.toLowerCase()),
+            },
+            {
+              sortable: false,
+              filterable: false,
+              align: "center",
+              Header: "State",
+              width: 120,
 
-        <table className="table">
+              style: { justifyContent: "center" },
+              Cell: (row) => {
+                return (
+                  <div>
+                    {" "}
+                    {!row.original.state ? (
+                      <div>
+                        <Button
+                          onClick={() => this.accepter(row)}
+                          className="mb-2 mr-2 btn-icon"
+                          outline
+                          color="success"
+                        >
+                          <i className="pe-7s-tools btn-icon-wrapper"> </i>
+                          Accept
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <Button
+                          onClick={() => this.onDelete(row)}
+                          className="mb-2 mr-2 btn-icon"
+                          outline
+                          color="danger"
+                        >
+                          <i className="pe-7s-tools btn-icon-wrapper"> </i>
+                          Disable
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                );
+              },
+            },
+          ]}
+          defaultPageSize={5}
+        />
+        {/* <table className="table">
           <thead>
             <tr>
               <th> </th>
@@ -285,25 +241,20 @@ export default class Service extends Component {
                 <td>{vehicule.governorate}</td>
 
                 <td>
-                  <a
-                    onClick={() => this.accepter(vehicule._id)}
-                  >
+                  <a onClick={() => this.accepter(vehicule._id)}>
                     <i className="fas fa-edit"></i>&nbsp;Accepter
                   </a>
                   &nbsp;
-                  <a
-                    href="#"
-                    onClick={() => this.onDelete(vehicule._id)}
-                  >
+                  <a href="#" onClick={() => this.onDelete(vehicule._id)}>
                     <i className="far fa-trash-alt"></i>&nbsp;Refuser
                   </a>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
 
-        <ReactPaginate
+        {/* <ReactPaginate
           previousLabel={"prev"}
           nextLabel={"next"}
           breakLabel={"..."}
@@ -315,7 +266,8 @@ export default class Service extends Component {
           containerClassName={"pagination"}
           subContainerClassName={"pages pagination"}
           activeClassName={"active"}
-        />
+        /> */}
+        <div style={{ marginBottom: "10%" }} className="col-lg-9 mt-5 "></div>
       </div>
     );
   }

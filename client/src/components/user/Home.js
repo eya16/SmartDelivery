@@ -9,6 +9,8 @@ import 'react-notifications-component/dist/theme.css';
 import 'animate.css';
 
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home (props){
 
@@ -16,6 +18,7 @@ export default function Home (props){
     const dispatch = useDispatch();
 
     useEffect( async()=>{
+        console.log(connectUser.username);
         if(Cookies.get('connect.sid') ){
 
         }else{
@@ -33,12 +36,35 @@ export default function Home (props){
     axios.get("http://localhost:5000/provider/acceptprovider/").then((res) => { 
       
     } ) 
-    )
 
+    )
+    useEffect(() => {
+        axios.get(`http://localhost:5000/provider/verif/${connectUser.id}`).then((response) => {
+            console.log(response)
+       if (response.data === true) {
+           console.log("aaa");
+           return (toast("you are accepted at the delivery service!"));
+       }
+       else {
+        console.log("bb");
+  return (toast("you are refused delivery service!") );
+
+       }
+     });
+         
+     }, [] );
+
+    // const  notify = () => toast("you are accepted at the delivery service!");
+
+    // const notify2 = () => toast("you are refused delivery service!");
+
+
+   
    
     return (
         <div style={{height:"700px"}}>
         <h1>Home</h1>
+        <ToastContainer />
         </div>
     )
 }

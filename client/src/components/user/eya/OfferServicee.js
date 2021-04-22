@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Form,
   Col,
@@ -9,11 +9,7 @@ import {
   Row,
 } from "react-bootstrap";
 import { Formik } from "formik";
-import {
-  GetProvider,
-  AddProvider,
-  editProviderWS,
-} from "../../../redux/slices/providerSlice";
+import { GetProvider, AddProvider } from "../../../redux/slices/providerSlice";
 import login from "../../../assets/Provider_Form.jpg";
 import "../../../styles/Contact.css";
 import moment from "moment";
@@ -41,9 +37,17 @@ function OfferService(props) {
 
   useEffect(() => {
     console.log("aadfs", connectUser.id);
+
     dispatch(GetProvider(connectUser.id));
     console.log("aa", provider);
-  }, []);
+  }, [dispatch]);
+  useEffect(() => {
+    console.log("aadfs", connectUser.id);
+
+    GetProvider(connectUser.id).then(() => {
+      console.log("ahhahahahahahahaha");
+    });
+  }, [dispatch]);
 
   useEffect(() => {
     async function fetching() {
@@ -64,6 +68,7 @@ function OfferService(props) {
 
   const [connectUser, error] = useSelector(selectConnectuser);
 
+  //
   const [withCar, setwithCar] = useState(false);
   const [preview, setPreview] = useState(undefined);
   const [file, setFile] = useState(undefined);
@@ -75,7 +80,6 @@ function OfferService(props) {
   const [ville, setville] = useState("");
   const [lat, setlat] = useState(0.0);
   const [long, setlong] = useState(0.0);
-  const [edit, setedit] = useState(false);
 
   // form
   const callbackFuncClient = (autoCompleteData) => {
@@ -171,8 +175,7 @@ function OfferService(props) {
                 validationSchema={schema}
                 onSubmit={(values) => {
                   dispatch(
-                    editProviderWS(
-                      provider._id,
+                    AddProvider(
                       values,
                       withCar,
                       file,
@@ -187,25 +190,15 @@ function OfferService(props) {
                   }, 500);
                 }}
                 initialValues={{
-                  FromDate: undefined,
+                  FromDate: moment(provider.FromDate).format("YYYY-MM-DD"),
                   // ville: "",
                   country: connectUser.adresse,
-                  vehicle: undefined,
+                  vehicle: false,
                   file: "",
-                  ToDate: undefined,
-                  PackageSize: undefined,
-                  Time: undefined,
+                  ToDate: moment(provider.ToDate).format("YYYY-MM-DD"),
+                  PackageSize: provider.PackageSize,
+                  Time: provider.Time,
                   id_user: connectUser.id,
-
-                  // FromDate: undefined,
-                  // // ville: "",
-                  // country: connectUser.adresse,
-                  // vehicle: undefined,
-                  // file: "",
-                  // ToDate: undefined,
-                  // PackageSize: undefined,
-                  // Time: "00:00",
-                  // id_user: connectUser.id,
                 }}
               >
                 {({
@@ -228,11 +221,7 @@ function OfferService(props) {
                         <Form.Control
                           type="Date"
                           name="FromDate"
-                          value={
-                            !values.FromDate
-                              ? moment(provider.FromDate).format("YYYY-MM-DD")
-                              : values.FromDate
-                          }
+                          value={values.FromDate}
                           onChange={handleChange}
                           min={moment().format("YYYY-MM-DD")}
                           isInvalid={!!errors.FromDate}
@@ -270,11 +259,7 @@ function OfferService(props) {
                           min={moment(values.FromDate)
                             .add(2, "days")
                             .format("YYYY-MM-DD")}
-                          value={
-                            !values.ToDate
-                              ? moment(provider.ToDate).format("YYYY-MM-DD")
-                              : values.ToDate
-                          }
+                          value={values.ToDate}
                           onChange={handleChange}
                           isInvalid={!!errors.ToDate}
                           style={{ width: "100%", borderRadius: "10px" }}
@@ -362,12 +347,7 @@ function OfferService(props) {
                           type="number"
                           name="PackageSize"
                           min={0}
-                          value={
-                            !values.PackageSize
-                              ? provider.PackageSize
-                              : values.PackageSize
-                          }
-                          // value={values.PackageSize}
+                          value={values.PackageSize}
                           onChange={handleChange}
                           isValid={touched.PackageSize && !errors.PackageSize}
                           isInvalid={!!errors.PackageSize}
@@ -387,7 +367,7 @@ function OfferService(props) {
                           type="time"
                           placeholder="Time"
                           name="Time"
-                          value={!values.Time ? provider.Time : values.Time}
+                          value={values.Time}
                           onChange={handleChange}
                           isInvalid={!!errors.Time}
                           isValid={touched.Time && !errors.Time}
@@ -399,41 +379,27 @@ function OfferService(props) {
                         </Form.Control.Feedback>
                       </Form.Group>
                     </Form.Row>
-                    <Form.Label>
-                      Your service is{" "}
-                      {provider.vehicle ? "with car" : "without car"}
-                    </Form.Label>
 
-                    <Button
-                      className="col-md-3 ml-2 mb-2"
-                      type="button"
-                      id="btncontact"
-                      onClick={() => {
-                        setedit(true);
-                      }}
-                    >
-                      Edit type
-                    </Button>
-                    {edit ? (
-                      <Form.Group>
-                        <input
-                          type="radio"
-                          name="vehicle"
-                          onChange={(e) => {
-                            if (e.target.checked) setwithCar(true);
-                          }}
-                        ></input>
-                        <Form.Label>With car </Form.Label>
-                        <input
-                          type="radio"
-                          name="vehicle"
-                          onChange={(e) => {
-                            if (e.target.checked) setwithCar(false);
-                          }}
-                        ></input>
-                        <Form.Label>Without car </Form.Label>
-                      </Form.Group>
-                    ) : null}
+                    <Form.Group>
+                      <input
+                        type="radio"
+                        name="vehicle"
+                        value={withCar}
+                        onChange={(e) => {
+                          if (e.target.checked) setwithCar(true);
+                        }}
+                      ></input>
+                      <Form.Label>With car </Form.Label>
+                      <input
+                        type="radio"
+                        name="vehicle"
+                        // checked={!provider.vehicle}
+                        onChange={(e) => {
+                          if (e.target.checked) setwithCar(false);
+                        }}
+                      ></input>
+                      <Form.Label>Without car </Form.Label>
+                    </Form.Group>
                     {withCar && (
                       <Form.Group
                         as={Col}
@@ -483,8 +449,8 @@ function OfferService(props) {
                       // <input type="text" name="id_user" >
                     )}
 
-                    <Button type="submit" id="btncontact" className="col-lg">
-                      Submit edit form
+                    <Button type="submit" id="btncontact" className="col-lg-5">
+                      Submit form
                     </Button>
                   </Form>
                 )}
