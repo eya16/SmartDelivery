@@ -1,0 +1,101 @@
+input,
+button,
+select,
+textarea,
+::placeholder {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+.address {
+  width: 100%;
+  max-width: 540px;
+  /* background-color: #fff; */
+  display: table;
+  border-radius: 6px;
+  z-index: 10;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+.address-field {
+  padding-right: 6px;
+  width: 50%;
+  float: left;
+  margin-bottom: 16px;
+  z-index: 10;
+}
+.address-field:nth-child(2n) {
+  padding-right: 0px;
+  padding-left: 6px;
+  z-index: 10;
+}
+.address-field input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 6px;
+  transition: all 0.3s;
+  z-index: 10;
+}
+.address-field input:focus {
+  border-color: #6ca9e6;
+  transition: all 0.3s;
+  background: #efefef;
+
+  z-index: 10;
+}
+.address-field label {
+  font-size: 11px;
+  color: #bbb;
+  margin-top: -5%;
+  margin-left: 2.5%;
+  display: block;
+  z-index: 10;
+}
+.addressInput {
+  padding-bottom: 20px;
+  position: relative;
+  z-index: 10;
+}
+.addressInput:before {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  z-index: 10;
+}
+.addressInput input#location {
+  width: 100%;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  z-index: 10;
+}
+.addressFields {
+  display: none;
+  z-index: 10;
+}
+
+.address .addressInput:before {
+  display: none;
+  z-index: 10;
+}
+
+.address.showFields .addressInput:before {
+  display: block;
+  z-index: 10;
+}
+
+.address.showFields .addressFields {
+  display: block;
+  z-index: 10;
+}
+
+.pac-container {
+  z-index: 10000 !important;
+}
