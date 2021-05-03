@@ -1,4 +1,4 @@
-import React, { useState, useEffect,lazy } from "react";
+import React, { useState, useEffect, lazy } from "react";
 import axios from "axios";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { fetchUsers, selectUsers } from "./redux/slices/admin/usersSlice";
@@ -11,13 +11,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Contact from './components/Contact'
+import Contact from "./components/Contact";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import HomeUser from "./components/HomeUser";
-import Register from "./components/Register"
- 
-
+import Register from "./components/Register";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,7 +30,7 @@ function App() {
     dispatch(fetchUsers());
   }, [dispatch]);*/
 
-
+  // eeeeeeeeeeeeee
 
   async function handleLogin() {
     await axios
@@ -73,14 +71,13 @@ function App() {
       <button onClick={voirresult}>click</button>
     </div>*/
     <>
-      
       <BrowserRouter>
-      <Navbar />
+        <Navbar />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/contact" component={Contact} />
           <Route path="/login" component={Login} />
-          <Route path="/register" component={Register}/>
+          <Route path="/register" component={Register} />
           <Route path="/homeuser" component={HomeUser} />
           <Route path="/**" component={Home} />
         </Switch>
