@@ -23,7 +23,6 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
-
 export default class Service extends Component {
   API_ENDPOINT = "http://localhost:5000/";
   constructor(props) {
@@ -117,6 +116,16 @@ export default class Service extends Component {
           <div className="col-lg-9 mt-2 mb-2">
             <h4>All providers</h4>
           </div>
+
+          {/* <div className="col-lg-3 mt-2 mb-2">
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search"
+              name="searchTerm"
+              onChange={this.handleTextSearch}
+            ></input>
+          </div> */}
         </div>
         <ReactTable
           data={this.state.data}
@@ -166,7 +175,7 @@ export default class Service extends Component {
               filterable: false,
               align: "center",
               Header: "State",
-              width: 180,
+              width: 120,
 
               style: { justifyContent: "center" },
               Cell: (row) => {
@@ -184,27 +193,9 @@ export default class Service extends Component {
                           <i className="pe-7s-tools btn-icon-wrapper"> </i>
                           Accept
                         </Button>
-                        <Button
-                          onClick={() => this.onDelete(row)}
-                          className="mb-2 mr-2 btn-icon"
-                          outline
-                          color="danger"
-                        >
-                          <i className="pe-7s-tools btn-icon-wrapper"> </i>
-                          Refuse
-                        </Button>
                       </div>
                     ) : (
                       <div>
-                         <Button
-                          onClick={() => this.accepter(row)}
-                          className="mb-2 mr-2 btn-icon"
-                          outline
-                          color="success"
-                        >
-                          <i className="pe-7s-tools btn-icon-wrapper"> </i>
-                          Accept
-                        </Button>
                         <Button
                           onClick={() => this.onDelete(row)}
                           className="mb-2 mr-2 btn-icon"
@@ -212,7 +203,7 @@ export default class Service extends Component {
                           color="danger"
                         >
                           <i className="pe-7s-tools btn-icon-wrapper"> </i>
-                          Refuse
+                          Disable
                         </Button>
                       </div>
                     )}
@@ -223,6 +214,59 @@ export default class Service extends Component {
           ]}
           defaultPageSize={5}
         />
+        {/* <table className="table">
+          <thead>
+            <tr>
+              <th> </th>
+              <th scope="col">Username</th>
+              <th scope="col">FromDate</th>
+              <th scope="col">ToDate</th>
+              <th scope="col">Time</th>
+              <th scope="col">country</th>
+              <th scope="col">governorate</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.vehicules.map((vehicule, index) => (
+              <tr>
+                <th scope="row">{index}</th>
+
+                <td>{vehicule.id_user}</td>
+
+                <td>{vehicule.FromDate}</td>
+                <td>{vehicule.ToDate}</td>
+                <td>{vehicule.Time}</td>
+                <td>{vehicule.country}</td>
+                <td>{vehicule.governorate}</td>
+
+                <td>
+                  <a onClick={() => this.accepter(vehicule._id)}>
+                    <i className="fas fa-edit"></i>&nbsp;Accepter
+                  </a>
+                  &nbsp;
+                  <a href="#" onClick={() => this.onDelete(vehicule._id)}>
+                    <i className="far fa-trash-alt"></i>&nbsp;Refuser
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table> */}
+
+        {/* <ReactPaginate
+          previousLabel={"prev"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={this.state.pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={this.handlePageClick}
+          containerClassName={"pagination"}
+          subContainerClassName={"pages pagination"}
+          activeClassName={"active"}
+        /> */}
         <div style={{ marginBottom: "10%" }} className="col-lg-9 mt-5 "></div>
       </div>
     );

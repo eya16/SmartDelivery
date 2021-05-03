@@ -81,6 +81,8 @@ function OfferService(props) {
   const callbackFuncClient = (autoCompleteData) => {
     setadressErrorText("");
     console.log("aaaa", autoCompleteData);
+    setlat(autoCompleteData.geometry.viewport.La.g);
+    setlong(autoCompleteData.geometry.viewport.Ua.g);
 
     if (autoCompleteData.address_components.length > 0) {
       let foundZips = _.find(autoCompleteData.address_components, [
@@ -89,29 +91,26 @@ function OfferService(props) {
       ]);
       setville(autoCompleteData.vicinity);
 
-      try {
-        setlat(autoCompleteData.geometry.viewport.La.g);
-        setlong(autoCompleteData.geometry.viewport.Ua.g);
+      if (foundZips !== undefined) {
         setadressErrorTextClient("");
         setadresseSelectionClient(true);
         setadresse(autoCompleteData.formatted_address);
-        // setcodePostal(foundZips.long_name);
-      } catch (error) {
-        console.log(error);
+        setcodePostal(foundZips.long_name);
+      } else {
         setadressErrorTextClient(
           "Veuillez inclure le code postal dans l'adresse  SVP !"
         );
         setadresseSelectionClient(false);
         setadresse(null);
-      }
 
-      // this.setState({
-      //   requiredFirst: true,
-      //   adressErrorTextClient:
-      //     "Veuillez inclure le code postal dans l'adresse  SVP !",
-      //   adresseSelectionClient: false,
-      //   adresse: null,
-      // });
+        // this.setState({
+        //   requiredFirst: true,
+        //   adressErrorTextClient:
+        //     "Veuillez inclure le code postal dans l'adresse  SVP !",
+        //   adresseSelectionClient: false,
+        //   adresse: null,
+        // });
+      }
     } else {
       setadressErrorTextClient(
         "L'adresse doit ressembler à ce format: 135 Rue d'Antrain, Rennes, France"
@@ -129,8 +128,6 @@ function OfferService(props) {
   };
   const callbackClearFunctionClient = (clear) => {
     setadresse(undefined);
-    setadressErrorTextClient("");
-
     // this.setState({
     //   adresse: undefined,
     // });
@@ -182,8 +179,7 @@ function OfferService(props) {
                       lat,
                       long,
                       ville,
-                      codePostal,
-                      JSON.parse(localStorage.getItem("userInfo")).id
+                      codePostal
                     )
                   );
                   setTimeout(() => {
@@ -317,6 +313,7 @@ function OfferService(props) {
                             callbackClearFunctionClient(fields)
                           }
                         />
+
                         {/* <Form.Control
                       type="text"
                       name="governorate"
@@ -331,7 +328,6 @@ function OfferService(props) {
                       Looks good!
                     </Form.Control.Feedback> */}
                       </Form.Group>
-
                       <Form.Group
                         as={Col}
                         md="5"
@@ -529,8 +525,7 @@ function OfferService(props) {
                       lat,
                       long,
                       ville,
-                      codePostal,
-                      JSON.parse(localStorage.getItem("userInfo")).id
+                      codePostal
                     )
                   );
                   setTimeout(() => {
@@ -656,9 +651,6 @@ function OfferService(props) {
                         <Form.Control.Feedback>
                           Looks good!
                         </Form.Control.Feedback> */}
-                        <p style={{ marginTop: "-8%", color: "red" }}>
-                          {adressErrorTextClient}
-                        </p>
                       </Form.Group>
                       <Form.Group
                         as={Col}

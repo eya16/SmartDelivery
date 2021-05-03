@@ -27,11 +27,6 @@ export default function StateDelivery (props){
     return (
         <div style={{height:"700px"}}>
         <h1>State Delivery</h1>
-        <div> 
-       <div style={{backgroundColor: "#0080ff"}}>  <h3> passer livraison  </h3>  </div>
-       <div style={{backgroundColor: "#ffe6e6"}} >  <h3> livraison en cours  </h3>  </div>
-       <div style={{backgroundColor: "#ffe6e6"}} disabled>  <h3> livraison reçu  </h3>  </div>
-            </div> 
         </div>
     )
 }

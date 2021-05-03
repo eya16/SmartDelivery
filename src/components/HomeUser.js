@@ -7,6 +7,7 @@ import { selectConnectuser, loginUserfind } from "../redux/slices/userSlice";
 import { fetchUsers } from "../redux/slices/admin/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
+import Test from "./test";
 import DashboardAdmin from "./admin/Dashboard";
 import ProfileAdmin from "./admin/Profile";
 import UsersAdmin from "./admin/Users";
@@ -28,12 +29,6 @@ import StateDeliveryUser from "./user/StateDelivery";
 import VehicleShotUser from "./user/VehicleShot";
 import offerServiceUser from "./user/eya/OfferService";
 import Service from "./admin/service/Service";
-import ListeLivraison from "./user/service/ListeLivraison";
-import ListeLivraisonCompany from "./company/ListeLivraisons/ListeLivraison";
-import ListeLivraisonCustomer from "./user/customer/ListeLivraisons/ListeLivraison";
-import Chart from "./company/Chart";
-
-
 export default function HomeUser(props) {
   const [connectUser, error] = useSelector(selectConnectuser);
   const dispatch = useDispatch();
@@ -97,14 +92,6 @@ export default function HomeUser(props) {
                   path="/homeuser/user/offerService"
                   component={offerServiceUser}
                 />
-                <Route
-                  path="/homeuser/user/listeLivraison"
-                  component={ListeLivraison}
-                />
-                <Route
-                  path="/homeuser/user/listeLivraisonCustomer"
-                  component={ListeLivraisonCustomer}
-                />
               </Switch>
             </div>
           ) : (
@@ -158,16 +145,6 @@ export default function HomeUser(props) {
                   path="/homuser/company/delivery"
                   component={DeliveryCompany}
                 />
-                <Route
-                  path="/homuser/company/deliveries"
-                  component={ListeLivraisonCompany}
-                />
-               
-               <Route
-                  path="/homuser/company/chart"
-                  component={Chart}
-                />
-               
               </Switch>
             </div>
           ) : (

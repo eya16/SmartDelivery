@@ -4,44 +4,9 @@ import { selectConnectuser } from "../redux/slices/userSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetProvider } from "../redux/slices/providerSlice";
-import axios from "axios";
 
 export default function Sidebar() {
   const [connectUser, error] = useSelector(selectConnectuser);
-  const [livraisons, setlivraisons] = useState(null);
-
-  const [livraisonsCustomer, setlivraisonsCustomer] = useState(null);
-  useEffect(() => {
-    axios
-      .post(`http://localhost:5000/livraison/getLivraisonsByProvider`, {
-        idProvdier: JSON.parse(localStorage.getItem("userInfo")).id,
-      })
-      .then((res) => {
-        try {
-          if (
-            res.data.livraison.length > 0 &&
-            JSON.parse(localStorage.getItem("userInfo")).id_Provider
-          ) {
-            console.log("resss1", res);
-          } else if (
-            res.data.livraison.length > 0 &&
-            !JSON.parse(localStorage.getItem("userInfo")).id_Provider
-          ) {
-            console.log("resss2", res);
-
-            setlivraisonsCustomer(res.data.livraison);
-          }
-        } catch (error) {}
-      });
-
-    axios
-      .post(`http://localhost:5000/livraison/getLivraisonsByCustomer`, {
-        id: JSON.parse(localStorage.getItem("userInfo")).id,
-      })
-      .then((res) => {
-        setlivraisons(res.data.livraison);
-      });
-  }, []);
 
   return (
     <>
@@ -97,26 +62,6 @@ export default function Sidebar() {
                   <span className="title">Offer a service</span>
                 </NavLink>
               </li>
-              {livraisons != null ? (
-                <li>
-                  <NavLink to="/homeuser/user/listeLivraison">
-                    <span className="icon">
-                      <i className="fa fa-archive"></i>
-                    </span>
-                    <span className="title">My deliveries</span>
-                  </NavLink>
-                </li>
-              ) : null}
-              {livraisonsCustomer != null ? (
-                <li>
-                  <NavLink to="/homeuser/user/listeLivraisonCustomer">
-                    <span className="icon">
-                      <i className="fa fa-archive"></i>
-                    </span>
-                    <span className="title">My deliveries</span>
-                  </NavLink>
-                </li>
-              ) : null}
             </ul>
           </div>
         </div>
@@ -223,22 +168,6 @@ export default function Sidebar() {
                     <i className="fa fa-archive"></i>
                   </span>
                   <span className="title">Delivery</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/homuser/company/deliveries">
-                  <span className="icon">
-                    <i className="fa fa-clone"></i>
-                  </span>
-                  <span className="title">Deliveries</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/homuser/company/chart">
-                  <span className="icon">
-                    <i className="fa fa-pie-chart"></i>
-                  </span>
-                  <span className="title">chart statistics</span>
                 </NavLink>
               </li>
             </ul>

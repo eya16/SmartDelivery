@@ -68,8 +68,7 @@ export const AddProvider = (
   lat,
   long,
   ville,
-  codepostal,
-  idUser
+  codepostal
 ) => async (dispatch) => {
   console.log("aaa", ville);
   const formData = new FormData();
@@ -84,7 +83,6 @@ export const AddProvider = (
   formData.append("vehicle", withCar);
   formData.append("long", long);
   formData.append("lat", lat);
-  formData.append("idUser", idUser);
 
   try {
     console.log("playoud", payload, withCar);
@@ -104,10 +102,9 @@ export const editProviderWS = (
   lat,
   long,
   ville,
-  codepostal,
-  idUser
+  codepostal
 ) => async (dispatch) => {
-  console.log("aaa", idUser);
+  console.log("aaa", ville);
   const formData = new FormData();
   formData.append("myfile", file);
   formData.append("FromDate", payload.FromDate);
@@ -121,7 +118,6 @@ export const editProviderWS = (
   formData.append("long", long);
   formData.append("lat", lat);
   formData.append("idprovider", idprovider);
-  formData.append("idUser", idUser);
 
   try {
     console.log("playoudedit", payload, withCar);
